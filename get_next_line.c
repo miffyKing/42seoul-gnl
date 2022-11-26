@@ -39,27 +39,31 @@ char	*ft_cutword(char *ptr)
 	return (dest);
 }
 
-char	*ft_read(int fd, char *ptr)
+char	*ft_read(int fd, char *ptr)							//Ptr을 buffer size 만큼 읽고, ptr에 담아 리턴.
 {
 	int		bytes;
 	char	*temp;
 
 	bytes = 1;
-	temp = malloc(sizeof(char) * BUFFER_SIZE+1);
+	temp = malloc(sizeof(char) * BUFFER_SIZE + 1);
+	
 	if (!temp)
-		return (NULL);
-	while (!ft_strchr(ptr, '\n') && bytes != 0)
+		return NULL;
+	
+	while (ft_strchr(ptr, '\n') == 0 && bytes != 0)
 	{
 		bytes = read(fd, temp, BUFFER_SIZE);
 		if (bytes < 0)
 		{
 			free(temp);
 			free(ptr);
-			return (NULL);
+			return NULL;
 		}
 		temp[bytes] = '\0';
 		ptr = ft_strjoin(ptr, temp);
+
 	}
+	
 	free(temp);
 	return (ptr);
 }
@@ -77,13 +81,11 @@ char	*get_next_line(int fd)
 		return (NULL);
 	}
 
-	//printf("ptr is 							%s								\n" , ptr);
-
-	if (!ptr)
-		ptr = ft_strdup("");
+	if (ptr == 0)
+		ptr = ft_strdup(""); // "" 복사해서 ptr에 넣음
 
 	ptr = ft_read(fd, ptr);
-
+	
 	if (ptr == 0)
 	{
 		free(ptr);
@@ -91,11 +93,15 @@ char	*get_next_line(int fd)
 	}
 
 	while (ptr[index] != '\n' && ptr[index])
+	{
 		index++;
+	}	
+	
 	line = ft_substr(ptr, 0, index + 1);
-	// printf("77777\n");
+	
 	ptr = ft_cutword(ptr);
-	if (!line || !line[0])
+	
+	if (line == 0 || line[0] == 0)
 	{
 		free(line);
 		return (NULL);
@@ -112,11 +118,11 @@ int main()
 
     i = 0;
 
-    fd = open("check.txt", O_RDONLY);
+    fd = open("test", O_RDONLY);
 
     line = get_next_line(fd);
 	
-    while (line)
+    while (line != NULL)
     {
         printf("line[%d] = %s", i + 1, line);
         free(line);

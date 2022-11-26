@@ -12,70 +12,80 @@
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(const char *s)
+size_t	ft_strlen(const char	*str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] != '\0')
+	{
+		i++;
+	}
+	return (i);
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	int		s1_len;
+	int		s2_len;
+	char	*tmp;
+	int		i;
+	int		j;
+
+	i = 0;
+	if (!s1 || !s2)
+		return (0);
+	s1_len = ft_strlen(s1);
+	s2_len = ft_strlen(s2);
+	tmp = (char *)malloc(sizeof(char) * (s1_len + s2_len + 1));
+	if (!tmp)
+		return (0);
+	while (i < s1_len)
+	{
+		tmp[i] = s1[i];
+		i++;
+	}
+	j = 0;
+	while (j < s2_len)
+		tmp[i++] = s2[j++];
+	tmp[i] = '\0';
+	return (tmp);
+}
+
+char	*ft_strdup(const char *src)
+{
+	char	*dest;
+	int		i;
+
+	i = 0;
+	while (src[i])
+		i++;
+	dest = (char *)malloc(sizeof(char) * (i + 1));
+	if (!dest)
+		return (0);
+	i = 0;
+	while (src[i])
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
+}
+
+char	*ft_strchr(const char *s, int c)
 {
 	int	i;
 
 	i = 0;
 	while (s[i])
-		i++;
-	return (i);
-}
-
-char	*ft_strjoin(char const *s1, char const *s2)
-{	
-	char	*final_str;
-	int		total_len;
-	int		index;
-	int		index2;
-
-	index = -1;
-	index2 = 0;
-	if (!s1 || !s2)
-		return (0);
-	total_len = ft_strlen(s1) + ft_strlen(s2);
-	final_str = (char *)malloc(sizeof(char) * total_len + 1);
-	if (!final_str)
-		return (0);
-	while (s1[++index])
-		final_str[index] = s1[index];
-	while (s2[index2])
-		final_str[index++] = s2[index2++];
-	final_str[index] = '\0';
-	free((void *)s1);
-	return (final_str);
-}
-
-char	*ft_strdup(const char *s1)
-{
-	int		i;
-	int		len;
-	char	*arr;
-
-	i = 0;
-	len = ft_strlen(s1);
-	arr = (char *)malloc(sizeof(char) * len + 1);
-	if (!arr)
-		return (0);
-	while (s1 && s1[i])
 	{
-		arr[i] = s1[i];
+		if (s[i] == (char)c)
+			return ((char *)(s + i));
 		i++;
 	}
-	arr[i] = 0;
-	return (arr);
-}
-
-char	*ft_strchr(const char *str, int c)
-{
-	while (*str)
-	{
-		if (*str == (char)c)
-			return ((char *)str);
-		str++;
-	}
-	if ((char)c == 0)
-		return ((char *)str);
+	if (c == '\0')
+		return ((char *)(s + ft_strlen(s)));
 	return (0);
 }
 
