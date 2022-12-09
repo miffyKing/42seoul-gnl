@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bcho <bcho@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/08 13:07:41 by bcho              #+#    #+#             */
-/*   Updated: 2022/12/08 15:33:10 by bcho             ###   ########.fr       */
+/*   Created: 2022/12/08 15:38:12 by bcho              #+#    #+#             */
+/*   Updated: 2022/12/08 16:00:27 by bcho             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*update_backup(char *backup)
 {
@@ -66,25 +66,25 @@ char	*ft_read(int fd, char *backup)
 
 char	*get_next_line(int fd)
 {
-	static char	*backup;
+	static char	*backup[OPEN_MAX + 1];
 	char		*line;
 	int			index;
 
 	index = 0;
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (!backup)
-		backup = ft_strdup("");
-	backup = ft_read(fd, backup);
-	if (!backup)
+	if (!backup[fd])
+		backup[fd] = ft_strdup("");
+	backup[fd] = ft_read(fd, backup[fd]);
+	if (!backup[fd])
 	{
-		free(backup);
+		free(backup[fd]);
 		return (NULL);
 	}
-	while (backup[index] != '\n' && backup[index])
+	while (backup[fd][index] != '\n' && backup[fd][index])
 		index++;
-	line = ft_substr(backup, 0, index + 1);
-	backup = update_backup(backup);
+	line = ft_substr(backup[fd], 0, index + 1);
+	backup[fd] = update_backup(backup[fd]);
 	if (!line || !line[0])
 	{
 		free(line);
